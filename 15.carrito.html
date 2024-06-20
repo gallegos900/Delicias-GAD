@@ -1,0 +1,262 @@
+<html>
+<head>
+<title>carrito</Title>
+</head>
+<body background="..\proyecto  empresarial\rosita.jpg">
+<p><font size=7 color="brown" face="Elephant">
+<center>Añade el producto de tu preferencia a tu carrito.</center></font>
+  <style>
+      .boton-regresar {
+            color: red;
+            background-color: yellow;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .boton-regresar:hover,
+        .boton-regresar:focus {
+            background-color: red;
+            color: yellow;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: pink;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .product-selection {
+            width: 40%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .selection-box {
+            margin-bottom: 20px;
+        }
+        .selection-box label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .selection-box select {
+            width: calc(100% - 10px);
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .selection-box div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .selection-box input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .selection-box input[type="radio"] {
+            margin-right: 5px;
+        }
+        .cart {
+            width: 50%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .cart-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .cart-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 4px;
+            position: relative;
+        }
+        .cart-item strong {
+            font-weight: bold;
+        }
+        .cart-item p {
+            margin: 5px 0;
+        }
+        .cart-item hr {
+            margin: 10px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .buy-btn {
+            display: block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="container">
+        <div class="product-selection">
+            <h2>Selecciona tus productos:</h2>
+            <div class="selection-box">
+                <label for="product">Productos principales:</label>
+                <select id="product">
+                    <option value="">Selecciona un pay...</option>
+                    <option value="fresa">Pay de fresa..........................................................440</option>
+                    <option value="limon">Pay de limón..........................................................400</option>
+                </select>
+            </div>
+            <div class="selection-box">
+                <label for="type">Tipo:</label>
+                <div>
+                    <input type="radio" id="rebanada" name="type" value="Rebanada" onchange="actualizarPrecio()">
+                    <label for="rebanada">Rebanada</label>
+                </div>
+                <div>
+                    <input type="radio" id="completo" name="type" value="Completo" onchange="actualizarPrecio()">
+                    <label for="completo">Completo</label>
+                </div>
+            </div>
+            <div class="selection-box">
+                <label>Toppings:</label>
+                <div>
+                    <input type="checkbox" id="chispas" value="Chispas de chocolate">
+                    <label for="chispas">Chispas de chocolate</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="lunetas" value="Lunetas">
+                    <label for="lunetas">Lunetas</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="granillo-chocolate" value="Granillo chocolate">
+                    <label for="granillo-chocolate">Granillo chocolate</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="granillo-colores" value="Granillo colores">
+                    <label for="granillo-colores">Granillo colores</label>
+                </div>
+            </div>
+            <div class="selection-box">
+                <label for="shape">Formas:</label>
+                <select id="shape">
+                    <option value="">Selecciona una forma...</option>
+                    <option value="estrella">Estrella</option>
+                    <option value="corazon">Corazón</option>
+                    <option value="circular">Circular</option>
+                    <option value="cuadrado">Cuadrado</option>
+                </select>
+            </div>
+            <button onclick="agregarAlCarrito()">Agregar a carrito</button>
+        </div>
+        <div class="cart">
+            <h2>Carrito de Compras:</h2>
+            <ul id="carrito-lista" class="cart-list"></ul>
+            <button class="buy-btn" onclick="comprar()">Comprar</button>
+        </div>
+    </div>
+
+    <script>
+        function actualizarPrecio() {
+            const producto = document.getElementById('product').value;
+            const tipo = document.querySelector('input[name="type"]:checked').value;
+            let precio = 0;
+
+            if (tipo === 'Rebanada') {
+                if (producto === 'limon') precio = 55;
+                else if (producto === 'fresa') precio = 60;
+            } else if (tipo === 'Completo') {
+                if (producto === 'limon') precio = 400;
+                else if (producto === 'fresa') precio = 440;
+            }
+
+            document.getElementById('precio').innerText = `Precio por pie: $${precio}`;
+        }
+
+        function agregarAlCarrito() {
+            const producto = document.getElementById('product').value;
+            const tipo = document.querySelector('input[name="type"]:checked').value;
+            const toppings = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(item => {
+                toppings.push(item.value);
+            });
+            const forma = document.getElementById('shape').value;
+
+            let precio = 0;
+            if (tipo === 'Rebanada') {
+                if (producto === 'limon') precio = 55;
+                else if (producto === 'fresa') precio = 60;
+            } else if (tipo === 'Completo') {
+                if (producto === 'limon') precio = 400;
+                else if (producto === 'fresa') precio = 440;
+            }
+
+            const carrito = document.getElementById('carrito-lista');
+            const item = document.createElement('li');
+            item.classList.add('cart-item');
+            item.innerHTML = `
+                <strong>Pay:</strong> ${producto} (${tipo}) <br>
+                <strong>Toppings:</strong> ${toppings.length > 0 ? toppings.join(', ') : 'Ninguno'} <br>
+                <strong>Forma:</strong> ${forma} <br>
+                <strong>Precio:</strong> $${precio} <br>
+                <button class="delete-btn" onclick="eliminarPedido(this)">X</button>
+                <hr>
+            `;
+
+            carrito.appendChild(item);
+        }
+
+        function eliminarPedido(elemento) {
+            const itemEliminar = elemento.parentElement;
+            itemEliminar.remove();
+        }
+
+        function comprar() {
+            const carritoItems = document.querySelectorAll('.cart-item');
+            const detallesPedido = [];
+
+            carritoItems.forEach(item => {
+                const pay = item.querySelector('strong:nth-of-type(1)').nextSibling.textContent.trim();
+                const toppings = item.querySelector('strong:nth-of-type(2)').nextSibling.textContent.trim();
+                const forma = item.querySelector('strong:nth-of-type(3)').nextSibling.textContent.trim();
+                const precio = item.querySelector('strong:nth-of-type(4)').textContent.trim();
+
+                // Construir el detalle del pedido
+                const detalle = `Pay: ${pay}, Toppings: ${toppings}, Forma: ${forma},`;
+                detallesPedido.push(detalle);
+            });
+
+            // Crear el cuerpo del correo con saltos de línea codificados
+            const cuerpoCorreo = detallesPedido.join('%0D%0A');
+
+            // Utilizar la API `encodeURIComponent` para asegurar que el cuerpo esté correctamente codificado
+            window.location.href = `mailto:chavezaranza66@gmail.com?subject=Detalle%20de%20Compra&body=${encodeURIComponent(cuerpoCorreo)}`;
+        }
+    </script>
+	<p><a href="..\proyecto  empresarial\0.indice.html" class="boton-regresar">Regresar</a>
+</body>
+</html>
